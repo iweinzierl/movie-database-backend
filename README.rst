@@ -13,7 +13,10 @@ Run
 .. code-block:: bash
 
    $ mvn package
+   $ #mvn package -P production  // build for production (copies resources from src/main/envs/production
+
    $ java -jar target/moviedatabase-backend-0.0.1-SNAPSHOT.jar
+   $ #java -jar target/moviedatabase-backend-0.0.1-SNAPSHOT.jar --server.port=7711  // adapt the server port
 
 
 License
