@@ -36,6 +36,12 @@ public class MovieController {
 
     @RequestMapping(path = "/api/movie", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Movie> saveMovie(@RequestBody Movie movie) {
+        final Movie alreadyExistingMovie = repository.findByTitle(movie.getTitle());
+        if (alreadyExistingMovie != null && Strings.isNullOrEmpty(movie.getId())) {
+            LOG.warn("Movie with title '{}' is already existing and no ID given to update existing movie!", movie.getTitle());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
         final Movie savedMovie = repository.save(movie);
 
         if (savedMovie != null && !Strings.isNullOrEmpty(savedMovie.getId())) {

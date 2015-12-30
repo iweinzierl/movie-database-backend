@@ -4,6 +4,7 @@ import com.github.isrsal.logging.RequestWrapper;
 import com.github.isrsal.logging.ResponseWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -73,7 +74,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 
             try {
                 byte[] body = reqWrapper.toByteArray();
-                builder.append(SPACES).append("Body Length: ").append(body.length).append("\n");
+                builder.append(SPACES).append("Body Length: ").append(body.length).append(" bytes").append("\n");
                 builder.append(SPACES).append("Body: ").append(new String(body, charEncoding)).append("\n");
             } catch (UnsupportedEncodingException e) {
             }
@@ -94,7 +95,17 @@ public class LoggingFilter extends OncePerRequestFilter {
 
             long duration = System.currentTimeMillis() - requestTimes.get(responseWrapper.getId());
             requestTimes.remove(responseWrapper.getId());
-            builder.append("ID ").append(responseWrapper.getId()).append(": ").append(duration).append(" ms");
+            builder
+                    .append("ID ")
+                    .append(responseWrapper.getId())
+                    .append(": ")
+                    .append(resp.getStatus())
+                    .append(" ")
+                    .append(HttpStatus.valueOf(resp.getStatus()).getReasonPhrase())
+                    .append(" (")
+                    .append(duration)
+                    .append(" ms")
+                    .append(")");
         }
 
         builder.append("\n");
@@ -115,7 +126,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 
             try {
                 byte[] body = respWrapper.toByteArray();
-                builder.append(SPACES).append("Body Length: ").append(body.length).append("\n");
+                builder.append(SPACES).append("Body Length: ").append(body.length).append(" bytes").append("\n");
                 builder.append(SPACES).append("Body: ").append(new String(body, charEncoding)).append("\n");
             } catch (UnsupportedEncodingException e) {
             }
