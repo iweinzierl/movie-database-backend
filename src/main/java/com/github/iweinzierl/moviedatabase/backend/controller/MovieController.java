@@ -1,6 +1,7 @@
 package com.github.iweinzierl.moviedatabase.backend.controller;
 
 import com.github.iweinzierl.moviedatabase.backend.domain.Movie;
+import com.github.iweinzierl.moviedatabase.backend.persistence.LentMovieInfoRepository;
 import com.github.iweinzierl.moviedatabase.backend.persistence.MovieRepository;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
@@ -20,6 +21,9 @@ public class MovieController {
 
     @Autowired
     private MovieRepository repository;
+
+    @Autowired
+    private LentMovieInfoRepository lentMovieInfoRepository;
 
     @RequestMapping(path = "/api/movie", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Movie>> listMovies() {
@@ -72,6 +76,7 @@ public class MovieController {
 
         if (movie != null) {
             repository.delete(movie);
+            lentMovieInfoRepository.delete(movie.getId());
             LOG.info("Deleted movie: {}", movie);
 
             return ResponseEntity.ok(movie);

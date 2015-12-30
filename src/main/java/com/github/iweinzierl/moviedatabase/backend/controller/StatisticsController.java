@@ -3,6 +3,7 @@ package com.github.iweinzierl.moviedatabase.backend.controller;
 import com.github.iweinzierl.moviedatabase.backend.domain.Movie;
 import com.github.iweinzierl.moviedatabase.backend.domain.Statistics;
 import com.github.iweinzierl.moviedatabase.backend.helper.MovieHelper;
+import com.github.iweinzierl.moviedatabase.backend.persistence.LentMovieInfoRepository;
 import com.github.iweinzierl.moviedatabase.backend.persistence.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,14 +22,17 @@ public class StatisticsController {
     private MovieHelper movieHelper;
 
     @Autowired
+    private LentMovieInfoRepository lentMovieInfoRepository;
+
+    @Autowired
     private MovieRepository repository;
 
     @RequestMapping(path = "/api/statistics", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Statistics> getStatistics() {
         List<Movie> movies = repository.findAll();
         Set<String> genres = movieHelper.findDistinctGenres();
+        long numberOfLentMovies = lentMovieInfoRepository.count();
 
-        // TODO include lent movies
-        return ResponseEntity.ok(new Statistics(movies.size(), genres.size(), 0));
+        return ResponseEntity.ok(new Statistics(movies.size(), genres.size(), (int) numberOfLentMovies));
     }
 }
