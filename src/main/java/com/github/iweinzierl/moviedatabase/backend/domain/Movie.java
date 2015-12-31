@@ -22,6 +22,8 @@ public class Movie {
 
     private LocalDate published;
 
+    private String formatInCollection;
+
     public Movie() {
     }
 
@@ -87,6 +89,14 @@ public class Movie {
 
     public void setPublished(LocalDate published) {
         this.published = published;
+    }
+
+    public String getFormatInCollection() {
+        return formatInCollection;
+    }
+
+    public void setFormatInCollection(String formatInCollection) {
+        this.formatInCollection = formatInCollection;
     }
 
     @Override
